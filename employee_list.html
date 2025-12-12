@@ -14,12 +14,21 @@
         .sidebar a:hover, .sidebar .active { color: #ffffff; background-color: #007bff; text-decoration: none; }
         .content { margin-left: 250px; padding: 20px; }
         .sidebar h4 { padding: 15px 25px 5px; font-size: 1.1rem; color: #ffffff; border-bottom: 1px solid #495057; margin-bottom: 10px; }
+        
+        /* CSS cho cột radio button/trạng thái */
+        .attendance-cell {
+            position: relative;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h4>Quản Lý EMS</h4>
-        <a href="report.html">📈 Trang Chủ</a>
+        <a href="index.html">🏠 Trang Chủ </a>
         <a href="department.html">➕ Thêm Phòng Ban</a>
         <a href="manage_employees.html">🧑‍💻 Quản Lý Nhân Viên</a>
         <a href="employee_list.html" class="active">📝 Điểm Danh</a>
@@ -29,28 +38,25 @@
 
     <div class="content">
         <div class="container mt-5">
-            <h2 class="text-center mb-4 text-primary">📋 Điểm Danh</h2>
+            <h2 class="text-center mb-4 text-primary">📋 Danh Sách Nhân Viên & Điểm Danh Theo Ca</h2>
 
             <div class="form-row mb-4 align-items-end">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="filter-shift">Chọn Ca làm việc:</label>
                     <select id="filter-shift" class="form-control" onchange="filterEmployees()">
                         <option value="Sáng">Ca Sáng</option>
                         <option value="Chiều">Ca Chiều</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="filter-dept">Lọc theo Phòng Ban:</label>
                     <select id="filter-dept" class="form-control" onchange="filterEmployees()">
                         <option value="Tất cả">Tất cả Phòng Ban</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="search-name">Tìm kiếm theo Tên:</label>
                     <input type="text" id="search-name" class="form-control" placeholder="Nhập tên nhân viên" onkeyup="filterEmployees()">
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-primary btn-block" onclick="showAddEmployeeFormFromList(false)">Thêm Nhân Viên</button>
                 </div>
             </div>
             
@@ -61,18 +67,24 @@
                         <th>Tên Nhân Viên</th>
                         <th>Chức Vụ</th>
                         <th>SĐT Liên Hệ</th>
-                        <th class="text-center">Nghỉ (Trạng thái)</th> 
+                        <th class="text-center" colspan="2">Nghỉ (Trạng thái)</th> 
                         <th class="text-center">Thao Tác</th>
+                    </tr>
+                    <tr class="table-info text-center">
+                        <th colspan="4"></th>
+                        <th>Có phép</th>
+                        <th>Không phép</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="employee-list-table-body">
-                    <tr><td colspan="6" class="text-center">Chọn ca và tải dữ liệu...</td></tr>
+                    <tr><td colspan="7" class="text-center">Chọn ca và tải dữ liệu...</td></tr>
                 </tbody>
             </table>
 
             <div class="text-right mt-4">
                 <button class="btn btn-success btn-lg" onclick="saveAttendanceAndRedirect()">
-                    Lưu Toàn Bộ 
+                    Lưu Toàn Bộ & Chuyển sang Trang Thống kê
                 </button>
             </div>
             

@@ -175,7 +175,8 @@ function renderEmployeeListTable(employees) {
     if (!tableBody) return;
 
     if (employees.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="text-center">Không tìm thấy nhân viên nào phù hợp.</td></tr>`;
+        // Colspan đã được điều chỉnh thành 7 (4 cột ban đầu + 2 cột radio + 1 cột thao tác)
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center">Không tìm thấy nhân viên nào phù hợp.</td></tr>`;
         return;
     }
 
@@ -183,33 +184,10 @@ function renderEmployeeListTable(employees) {
         const attendance = currentAttendance.find(att => 
             att.id === emp.id && att.date === today && att.shift === selectedShift
         );
-        // Hiển thị trạng thái nghỉ, ngược lại hiển thị "<u>Chọn trạng thái</u>"
-        const statusText = attendance && (attendance.status === 'Phép' || attendance.status === 'Không phép') 
-                           ? attendance.status 
-                           : "<u>Chọn trạng thái</u>"; 
         
+        // Xác định trạng thái đã chọn cho Radio Button trực tiếp
         const isSelectedPhép = (attendance && attendance.status === 'Phép') ? 'checked' : '';
         const isSelectedKhôngPhép = (attendance && attendance.status === 'Không phép') ? 'checked' : '';
-
-
-        // NỘI DUNG POPOVER: Chỉ Radio button và nút reset (Đã làm gọn theo yêu cầu)
-        const popoverContent = `
-            <div class="d-flex flex-column">
-                <label class="mb-1">
-                    <input type="radio" name="popover-att-${emp.id}" value="Phép" ${isSelectedPhép} 
-                           onclick="updateAttendanceStatus(${emp.id}, 'Phép')"> Có phép
-                </label>
-                <label class="mb-1">
-                    <input type="radio" name="popover-att-${emp.id}" value="Không phép" ${isSelectedKhôngPhép}
-                           onclick="updateAttendanceStatus(${emp.id}, 'Không phép')"> Không phép
-                </label>
-                <hr class="my-1">
-                <button class="btn btn-sm btn-link text-secondary" 
-                        onclick="updateAttendanceStatus(${emp.id}, 'Đi làm')">
-                    (Đánh dấu Đi làm)
-                </button>
-            </div>
-        `;
 
         return `
             <tr data-employee-id="${emp.id}">
@@ -217,17 +195,28 @@ function renderEmployeeListTable(employees) {
                 <td>${emp.name}</td> 
                 <td>${emp.position}</td>
                 <td>${emp.phone || 'N/A'}</td> 
+                
                 <td class="text-center">
-                    <div class="attendance-cell" 
-                         data-toggle="popover" 
-                         data-placement="left" 
-                         data-html="true" 
-                         data-content='${popoverContent.replace(/'/g, '&#39;')}' style="display:inline-block;">
-                        ${statusText}
-                    </div>
+                    <input type="radio" 
+                           name="att-${emp.id}-${selectedShift}" 
+                           value="Phép" 
+                           ${isSelectedPhép} 
+                           onclick="updateAttendanceStatus(${emp.id}, 'Phép')">
                 </td>
                 
                 <td class="text-center">
+                    <input type="radio" 
+                           name="att-${emp.id}-${selectedShift}" 
+                           value="Không phép" 
+                           ${isSelectedKhôngPhép} 
+                           onclick="updateAttendanceStatus(${emp.id}, 'Không phép')">
+                </td>
+                
+                <td class="text-center">
+                    <button class="btn btn-sm btn-link text-secondary mx-1" 
+                            onclick="updateAttendanceStatus(${emp.id}, 'Đi làm')">
+                        (Reset)
+                    </button>
                     <button class="btn btn-sm btn-warning mx-1" onclick="editEmployee(${emp.id})" title="Chỉnh sửa">
                         ✏️ 
                     </button>
@@ -238,8 +227,9 @@ function renderEmployeeListTable(employees) {
             </tr>
         `;
     }).join('');
-
-    initializePopovers();
+    
+    // Đảm bảo Popover không được gọi ở đây nếu đang dùng Radio Button trực tiếp
+    // initializePopovers(); 
 }
 
 function filterEmployees() {
@@ -279,9 +269,6 @@ function updateAttendanceStatus(id, status) {
     }
 
     saveData(ATTENDANCE_DATA_KEY, currentAttendance);
-
-    // Xóa Popover khỏi DOM để tránh lỗi hiển thị liên tục
-    $('.popover').remove(); 
     
     // Tải lại bảng để cập nhật trạng thái
     filterEmployees();
@@ -405,7 +392,7 @@ function saveAttendanceAndRedirect() {
     
     alert("✅ Dữ liệu điểm danh đã được lưu toàn bộ! Chuyển sang trang Thống kê.");
     
-    window.location.href = 'report.html';
+    window.location.href = 'index.html'; // Đã đổi tên report.html
 }
 
 if (document.getElementById('employee-list-table-body')) {
@@ -588,20 +575,7 @@ if (document.getElementById('managed-employee-table-body')) {
     });
 }
 
-
-// --- Logic Trang report.html (Thống kê) ---
-
-if (document.getElementById('report-date-filter')) {
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('report-date-filter').valueAsDate = new Date();
-        loadReportDataFinal();
-    });
-}
-// --- CẬP NHẬT TRONG FILE script.js ---
-
-// ... (Các hàm cũ giữ nguyên) ...
-
-// --- LOGIC MỚI CHO TRANG manage_departments.html ---
+// --- Logic Trang manage_departments.html (Quản lý Phòng Ban) ---
 
 // Hàm chính để tải và hiển thị bảng phòng ban
 function renderDepartmentTable(departments) {
@@ -611,7 +585,7 @@ function renderDepartmentTable(departments) {
     if (!tableBody) return;
 
     if (departments.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="4" class="text-center">Không tìm thấy phòng ban nào.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="4" class="text-center">Chưa có phòng ban nào được tạo.</td></tr>`;
         return;
     }
 
@@ -640,10 +614,11 @@ function renderDepartmentTable(departments) {
     }).join('');
 }
 
-// Hàm lọc phòng ban
+// Hàm lọc phòng ban (để gọi từ ô tìm kiếm và khi khởi tạo)
 function filterDepartments() {
     const allDepartments = getData(DEPARTMENT_DATA_KEY);
-    const searchName = document.getElementById('search-dept-name').value.toLowerCase();
+    const searchNameInput = document.getElementById('search-dept-name');
+    const searchName = searchNameInput ? searchNameInput.value.toLowerCase() : '';
     
     let filteredList = allDepartments;
 
@@ -727,7 +702,17 @@ if (document.getElementById('department-list-table-body')) {
         filterDepartments();
     });
 }
-// ... (Các hàm khác giữ nguyên) ...
+
+
+// --- Logic Trang report.html (Thống kê) ---
+
+if (document.getElementById('report-date-filter')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('report-date-filter').valueAsDate = new Date();
+        loadReportDataFinal();
+    });
+}
+
 function loadReportDataFinal() {
     const reportDate = document.getElementById('report-date-filter').value || today;
     const reportShift = document.getElementById('report-shift-filter').value;
