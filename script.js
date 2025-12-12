@@ -514,7 +514,7 @@ function getDailyShiftStatus(empId, targetDate) {
             combinedStatus = 'Có phép';
         }
         else{
-            combinedStatus='1 buổi';
+            combinedStatus='phép 1 buổi';
         }
 
         return `Cả ngày (${combinedStatus})`; 
