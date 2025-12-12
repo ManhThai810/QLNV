@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ & Báo Cáo Thống Kê</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS cho Sidebar (Để đảm bảo hiển thị đúng) */
+        .sidebar { height: 100%; width: 250px; position: fixed; top: 0; left: 0; background-color: #343a40; padding-top: 20px; color: #f8f9fa; }
+        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 18px; color: #adb5bd; display: block; transition: 0.3s; }
+        .sidebar a:hover, .sidebar .active { color: #ffffff; background-color: #007bff; text-decoration: none; }
+        .content { margin-left: 250px; padding: 20px; }
+        .sidebar h4 { padding: 15px 25px 5px; font-size: 1.1rem; color: #ffffff; border-bottom: 1px solid #495057; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h4>Quản Lý EMS</h4>
+        <a href="report.html" class="active">📈 Trang Chủ</a>
+        <a href="department.html">➕ Thêm Phòng Ban</a>
+        <a href="manage_employees.html">🧑‍💻 Quản Lý Nhân Viên</a>
+        <a href="employee_list.html">📝 Điểm Danh</a>
+        <a href="manage_departments.html">🏢 Quản Lý Phòng Ban</a>
+       
+    </div>
+
+    <div class="content">
+        <h2 class="text-center mb-4 text-primary">📊 Báo Cáo Thống Kê</h2>
+        <div class="card p-4 shadow-lg">
+            
+            <div class="form-row mb-4 align-items-center">
+                <div class="col-md-4">
+                    <label for="report-date-filter">Chọn Ngày Báo cáo:</label>
+                    <input type="date" id="report-date-filter" class="form-control" required onchange="loadReportDataFinal()">
+                </div>
+                <div class="col-md-3">
+                    <label for="report-shift-filter">Chọn Ca:</label>
+                    <select id="report-shift-filter" class="form-control" onchange="loadReportDataFinal()">
+                        <option value="Tất cả">Tất cả (Sáng & Chiều)</option>
+                        <option value="Sáng">Ca Sáng</option>
+                        <option value="Chiều">Ca Chiều</option>
+                    </select>
+                </div>
+            </div>
+            
+            <hr>
+
+            <div class="metric-container mb-5">
+                <div class="metric-box box-total">
+                    <h5>Tổng Số Nhân Viên Công Ty</h5>
+                    <p id="total-employees-metric" class="display-4 text-primary">0</p>
+                </div>
+                <div class="metric-box box-approved">
+                    <h5>Tổng NV Nghỉ Có Phép</h5>
+                    <p id="total-absent-approved-metric" class="display-4 text-success">0</p>
+                </div>
+                <div class="metric-box box-unapproved">
+                    <h5>Tổng NV Nghỉ Không Phép</h5>
+                    <p id="total-absent-unapproved-metric" class="display-4 text-danger">0</p>
+                </div>
+            </div>
+
+            <h4 class="mt-4">Chi Tiết Vắng Mặt Theo Phòng Ban</h4>
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                    <tr class="bg-light">
+                        <th>Tên Phòng Ban</th>
+                        <th class="bg-light1">Số lượng Nhân viên Công Ty</th>
+                        <th class="bg-light1">Số người Nghỉ Có Phép</th>
+                        <th class="bg-light1">Số người Nghỉ Không Phép</th>
+                    </tr>
+                </thead>
+                <tbody id="report-dept-summary-body">
+                    <tr><td colspan="4" class="text-center">Vui lòng chọn ngày để xem báo cáo.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

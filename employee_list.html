@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Nhân Viên & Điểm Danh</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .sidebar { height: 100%; width: 250px; position: fixed; top: 0; left: 0; background-color: #343a40; padding-top: 20px; color: #f8f9fa; }
+        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 18px; color: #adb5bd; display: block; transition: 0.3s; }
+        .sidebar a:hover, .sidebar .active { color: #ffffff; background-color: #007bff; text-decoration: none; }
+        .content { margin-left: 250px; padding: 20px; }
+        .sidebar h4 { padding: 15px 25px 5px; font-size: 1.1rem; color: #ffffff; border-bottom: 1px solid #495057; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4>Quản Lý EMS</h4>
+        <a href="report.html">📈 Trang Chủ</a>
+        <a href="department.html">➕ Thêm Phòng Ban</a>
+        <a href="manage_employees.html">🧑‍💻 Quản Lý Nhân Viên</a>
+        <a href="employee_list.html" class="active">📝 Điểm Danh</a>
+        <a href="manage_departments.html">🏢 Quản Lý Phòng Ban</a>
+        
+    </div>
+
+    <div class="content">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 text-primary">📋 Điểm Danh</h2>
+
+            <div class="form-row mb-4 align-items-end">
+                <div class="col-md-3">
+                    <label for="filter-shift">Chọn Ca làm việc:</label>
+                    <select id="filter-shift" class="form-control" onchange="filterEmployees()">
+                        <option value="Sáng">Ca Sáng</option>
+                        <option value="Chiều">Ca Chiều</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="filter-dept">Lọc theo Phòng Ban:</label>
+                    <select id="filter-dept" class="form-control" onchange="filterEmployees()">
+                        <option value="Tất cả">Tất cả Phòng Ban</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="search-name">Tìm kiếm theo Tên:</label>
+                    <input type="text" id="search-name" class="form-control" placeholder="Nhập tên nhân viên" onkeyup="filterEmployees()">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-block" onclick="showAddEmployeeFormFromList(false)">Thêm Nhân Viên</button>
+                </div>
+            </div>
+            
+            <table class="table table-bordered table-hover table-sm">
+                <thead>
+                    <tr class="table-info">
+                        <th>Phòng Ban</th> 
+                        <th>Tên Nhân Viên</th>
+                        <th>Chức Vụ</th>
+                        <th>SĐT Liên Hệ</th>
+                        <th class="text-center">Nghỉ (Trạng thái)</th> 
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-list-table-body">
+                    <tr><td colspan="6" class="text-center">Chọn ca và tải dữ liệu...</td></tr>
+                </tbody>
+            </table>
+
+            <div class="text-right mt-4">
+                <button class="btn btn-success btn-lg" onclick="saveAttendanceAndRedirect()">
+                    Lưu Toàn Bộ 
+                </button>
+            </div>
+            
+        </div>
+
+        <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addEmployeeModalLabel">Thêm Nhân Viên Mới</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit-employee-id">
+                        <div class="form-group">
+                            <label for="emp-name-list">Tên Nhân Viên:</label>
+                            <input type="text" id="emp-name-list" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-dept-list">Phòng Ban:</label>
+                            <select id="emp-dept-list" class="form-control" required>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-position-list">Chức Vụ:</label>
+                            <input type="text" id="emp-position-list" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-phone-list">SĐT Liên hệ:</label>
+                            <input type="text" id="emp-phone-list" class="form-control" required pattern="[0-9]{10,11}" title="Chỉ nhập số (10-11 chữ số)">
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-dob-list">Ngày Sinh:</label>
+                            <input type="date" id="emp-dob-list" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-cccd-list">CCCD:</label>
+                            <input type="text" id="emp-cccd-list" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-start-date-list">Ngày Bắt Đầu Làm Việc:</label>
+                            <input type="date" id="emp-start-date-list" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="modal-save-btn" onclick="saveEmployeeFromList()">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* Yêu cầu căn chỉnh 50px */
+.department-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-left: 50px; 
+    margin-right: 50px;
+}
+
+.department-name-input {
+    width: 60%; 
+}
+
+.add-employee-btn {
+    width: 200px; 
+}
+
+.table-info th {
+    background-color: #d1ecf1;
+}
+
+/* Tô màu nổi bật cho chỉ số quan trọng */
+#summary-metrics strong {
+    color: #007bff;
+    font-size: 1.1em;
+}
+
+/* CSS cho 3 ô vuông */
+.metric-container {
+    display: flex;
+    justify-content: flex-start; /* Sửa để căn trái 3 ô vuông */
+}
+
+.metric-box {
+    width: 400px;  /* Chiều ngang 200px */
+    height: 200px; /* Chiều cao 200px */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.bg-light1{
+    text-align: center;
+    justify-content: center;
+}
+
+/* Khoảng cách 50px giữa các ô */
+.metric-box:not(:last-child) {
+    margin-right: 50px; 
+}
+
+.metric-box h5 {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.metric-box .display-4 {
+    font-size: 3rem;
+    margin-top: 10px;
+}
+
+.box-total { background-color: #e0f7fa; } 
+.box-approved { background-color: #e8f5e9; } 
+.box-unapproved { background-color: #ffebee; } 
+
+/* CSS cho cột radio button/trạng thái */
+.attendance-cell {
+    position: relative;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    color: #007bff;
+}
+
+.attendance-checkbox-group {
+    display: flex;
+    justify-content: center;
+}
