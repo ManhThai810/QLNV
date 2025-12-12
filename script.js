@@ -508,10 +508,13 @@ function getDailyShiftStatus(empId, targetDate) {
     if (morningStatus && afternoonStatus) {
         let combinedStatus;
         
-        if (morningStatus.status === 'Không phép' || afternoonStatus.status === 'Không phép') {
+        if (morningStatus.status === 'Không phép' && afternoonStatus.status === 'Không phép') {
             combinedStatus = 'Không phép';
-        } else {
+        } else if(morningStatus.status==='Có phép' && afternoonStatus.status === 'Có phép') {
             combinedStatus = 'Có phép';
+        }
+        else{
+            combinedStatus='1 buổi';
         }
 
         return `Cả ngày (${combinedStatus})`; 
